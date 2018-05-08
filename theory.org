@@ -1,0 +1,129 @@
+#+STARTUP: showall
+#+STARTUP: lognotestate
+#+TAGS: research(r) uvic(u) today(y) todo(t) cooking(c)
+#+SEQ_TODO: TODO(t) STARTED(s) DEFERRED(r) CANCELLED(c) | WAITING(w) DELEGATED(d) APPT(a) DONE(d) 
+#+DRAWERS: HIDDEN STATE
+#+ARCHIVE: %s_done::
+#+TITLE: 
+#+CATEGORY: 
+#+PROPERTY: header-args:sql             :engine postgresql  :exports both :cmdline csc370
+#+PROPERTY: header-args:sqlite          :db /path/to/db  :colnames yes
+#+PROPERTY: header-args:C++             :results output :flags -std=c++14 -Wall --pedantic -Werror
+#+PROPERTY: header-args:R               :results output  :colnames yes
+#+OPTIONS: ^:nil toc:nil
+# OPTIONS:   H:3 num:t  \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+# OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+# latex_header: \documentclass[a4paper,40pt]{extarticle}
+#+latex_header: \usepackage[letter, top=1cm,bottom=2cm,left=1cm,right=1cm]{geometry}
+
+* Functional dependencies (FDs)
+
+- An FD is a constraint between two sets of attributes of a relation
+
+- Given R, a set of attributes X in R is said to *functionally determine* another set of
+  attributes Y in R (denoted $X \rightarrow Y$) *iff* 
+  - 2 tuples have the same values of X, *then* they must have the same values for attribute Y
+
+- For the sake of simplicity we will write the set of attributes as lists:
+
+\begin{equation}
+A_1, ..., A_n \rightarrow B_1, ... B_m
+\end{equation}
+
+
+* Example relation
+
+#+ATTR_LaTeX: :align |l|l|l|l|l|l|
+| *title*       | *year* | *len*    | *genre* | *studio*     | *starName*    |
+|---------------+--------+----------+---------+--------------+---------------|
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Carry Fisher  |
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Mark Hamill   |
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Harrison Ford |
+| The Godfather |   1972 |      175 | Drama   | Paramount    | Robert Duvall |
+| The Godfather |   1972 |      175 | Drama   | Paramount    | Marlon Brando |
+| Moonstruck    |   1987 |      102 | Comedy  | MGM          | Cher          |
+
+* Superkey
+
+ - A set of attributes $\{A_1,... A_n\}$ is a superkey of R iff $A_1,... A_n \rightarrow R$ 
+
+* Candidate key
+
+- A candidate key is a superkey  that is minimal:
+
+  - Given a candidate key $K = \{A_1, ..., A_n\}$ there is no proper subset C of K s.t. $C \rightarrow R$
+
+* Reasoning about FDs
+
+Given a relation R *two sets of FDs A and B* are *equivalent* if:
+
+- the set of instances of R that satisfy A is exactly the same that satisfy B
+
+More generally:  a set of FDs A *follows*  from a set of FDs B if:
+  
+ - every relation instance that satisfies all the FDs in B also satisfies all the FDs in A
+
+Hence:
+
+  - Two sets of FDs A and B are equivalent iff A follows B and B follows A.
+
+* Armstrong's Axioms
+
+Given relation R with subsets of attributes X, Y and Z:
+
+- *Reflexivity* (Trivial):
+
+\begin{equation}
+Y \subseteq X \text{ then } X \rightarrow Y
+\end{equation}
+
+- *Augmentation*:
+
+\begin{equation}
+\text{If } X \rightarrow Y \text{ then } XZ \rightarrow YZ \text{\quad for any Z}
+\end{equation}
+
+- *Transitivity*:
+
+\begin{equation}
+\text{If } X \rightarrow Y, Y \rightarrow Z \text{ then } X \rightarrow Z 
+\end{equation}
+
+* Closure of attributes
+
+Given a relation R and a set of FDs, *what other FDs* can be computed from a set of FDs *f*?
+
+- The *closure of a set of attributes* $A_1, ..., A_n$ denoted $\{A_1, ..., A_n\}^+$ 
+- is the set of attributes that can be derived from $A_1, ..., A_n$ *using* f
+
+
+* Algorithm to compute the closure of attributes
+
+To compute $\{ A_1 ... A_n\}^+$:
+
+1. Rewrite FDs in Canonical form
+
+2. $X \leftarrow A_1...A_n$
+
+3. For each $B_1...B_m \leftarrow C$ in FDs
+
+   - if  $B_1...B_m \subseteq X$ and $C \notin X$
+
+      - add $C$ to $X$
+
+4. Repeat (3) until $X$ does not change
+
+At the end: $X = \{ A_1 ... A_n\}^+$
+
+
+* Closure of sets of FDs
+
+- do not confuse it with the closure of attributes!!!
+
+- Given a set f of FDs, its closure $f^+$ is the set of all FDs derived from f
+
+- Two sets of A and B of FDs of a relation R are equivalent iff $\{A\}^+ = \{B\}^+$
+
+* Testing is an FD in f is part of $\{f\}^+$
+
+$X \rightarrow Y \in f^
