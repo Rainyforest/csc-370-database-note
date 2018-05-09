@@ -1,0 +1,54 @@
+#+STARTUP: showall
+#+STARTUP: lognotestate
+#+TAGS: research(r) uvic(u) today(y) todo(t) cooking(c)
+#+SEQ_TODO: TODO(t) STARTED(s) DEFERRED(r) CANCELLED(c) | WAITING(w) DELEGATED(d) APPT(a) DONE(d) 
+#+DRAWERS: HIDDEN STATE
+#+ARCHIVE: %s_done::
+#+TITLE: Chapter 3: Design Theory for Relational Databases
+#+CATEGORY: 
+#+PROPERTY: header-args:sql             :engine postgresql  :exports both :cmdline csc370
+#+PROPERTY: header-args:sqlite          :db /path/to/db  :colnames yes
+#+PROPERTY: header-args:C++             :results output :flags -std=c++14 -Wall --pedantic -Werror
+#+PROPERTY: header-args:R               :results output  :colnames yes
+#+OPTIONS: ^:nil
+
+* Topics covered:
+
+- Functional dependencies
+- Superkeys
+- Candidate keys
+- Closure of attributes
+- Closure of sets of FDs
+- Basis and minimal basis 
+- 1st, 3rd and BC normal forms
+- Testing a relation is in 3NF or BCNF
+- Lossless join decomposition
+- FD preserving decomposition
+- Good decomposition of relations into 3NF or BNCF subrelations
+
+* What is covered from the textbook:
+
+This is what you must study for the exam:
+
+- 3.1
+- 3.2
+- 3.3
+- 3.4 (skip 3.4.2 and 3.4.3)
+- 3.5
+
+
+* Further information:
+
+Some very good videos from Gary Boetticher at University of Houston -Clear Lake
+
+- [[https://www.youtube.com/watch?v=j4GfUYdampo][Armstrong's Axioms]]
+- [[https://www.youtube.com/watch?v=Nv_rPDOwoVQ][Closure of Attributes]]
+- [[https://www.youtube.com/watch?v=ZruXqg4jL4Y][Covers]] (the term cover is equivalent to basis)
+- [[https://www.youtube.com/watch?v=IiEAfRoHIH8][Minimal Cover]]
+- [[https://www.youtube.com/watch?v=s1DNVWKeQ_w][How to compute keys of a relation]]
+- [[https://www.youtube.com/watch?v=TykMe1A2u6U][Lossless join decomposition]]
+- [[https://www.youtube.com/watch?v=9PZzyMhQViw][Function dependency preservation]]
+- [[https://www.youtube.com/watch?v=cbJ-xaBfWLM][First and second normal forms (ignore second)]]
+- [[https://www.youtube.com/watch?v=nUbp9MRN0To][Third normal form]]
+- [[https://www.youtube.com/watch?v=Xslub-nHVss&list=PLvndR40H6vCUSkb88kFdmlSzAzsnQIJBF&index=8][Synthesis algorithm]]
+

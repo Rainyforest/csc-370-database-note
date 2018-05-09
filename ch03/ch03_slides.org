@@ -124,6 +124,44 @@ At the end: $X = \{ A_1 ... A_n\}^+$
 
 - Two sets of A and B of FDs of a relation R are equivalent iff $\{A\}^+ = \{B\}^+$
 
-* Testing is an FD in f is part of $\{f\}^+$
+* Testing if an FD in f is part of $\{f\}^+$
 
-$X \rightarrow Y \in f^
+\begin{equation}
+X \rightarrow Y \in f^+ \text{ iff }  Y \subsetqe \{X\}^+ \text{ (using f)}
+\end{equation}
+
+
+* Basis of a relation
+
+Given a relation R and FDs f, we say that:
+
+-  any set $g$ s.t. $f^+ = g^+$ is a *basis* of R
+
+* Minimal basis (3.2.7)
+
+A *minimal basis* of a relation R is a *basis* of R s.t.:
+
+1. All FDs in B are in Canonical Form
+
+2. If, for any FD we remove one or more attr from the left hand side of an FD, the result is no longer a basis.
+
+3. If any FD is removed from B, the result is no longer a basis
+
+(note that the order in the book is different)
+
+* Projection of FDs (3.2.8)
+
+Given R and set F of FDs, the projection of F, $R_1 = \Pi_L R$, is:
+
+- the set of FDs that follows from F 
+- that involve only attributes in $R_1$
+
+* Algorithm to compute the projection of FDs
+
+1. $T \leftarrow \emptyset$
+
+2. For each subset $X \in L$ compute ${X}^+$
+    
+   - for every attribute A in ${X}^+$
+     
+     - add $X \rightarrow A$ to T iff $A \in L$ and $A \not \in X$
