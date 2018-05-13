@@ -14,7 +14,8 @@
 # OPTIONS:   H:3 num:t  \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 # OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
 # latex_header: \documentclass[a4paper,40pt]{extarticle}
-#+latex_header: \usepackage[letter, top=1cm,bottom=2cm,left=1cm,right=1cm]{geometry}
+# latex_header: \usepackage[letter, top=1cm,bottom=2cm,left=1cm,right=1cm]{geometry}
+#+latex_header: \usefonttheme[onlymath]{serif}
 
 * Functional dependencies (FDs)
 
@@ -105,7 +106,7 @@ To compute $\{ A_1 ... A_n\}^+$:
 
 2. $X \leftarrow A_1...A_n$
 
-3. For each $B_1...B_m \leftarrow C$ in FDs
+3. For each $B_1...B_m \rightarrow C$ in FDs
 
    - if  $B_1...B_m \subseteq X$ and $C \notin X$
 
@@ -127,7 +128,7 @@ At the end: $X = \{ A_1 ... A_n\}^+$
 * Testing if an FD in f is part of $\{f\}^+$
 
 \begin{equation}
-X \rightarrow Y \in f^+ \text{ iff }  Y \subsetqe \{X\}^+ \text{ (using f)}
+X \rightarrow Y \in f^+ \text{ iff }  Y \subseteq \{X\}^+ \text{ (using f)}
 \end{equation}
 
 
@@ -149,11 +150,12 @@ A *minimal basis* of a relation R is a *basis* of R s.t.:
 
 (note that the order in the book is different)
 
+
 * Projection of FDs (3.2.8)
 
-Given R and set F of FDs, the projection of F, $R_1 = \Pi_L R$, is:
+Given R and set f of FDs, the projection of f, $R_1 = \Pi_L R$, is:
 
-- the set of FDs that follows from F 
+- the set of FDs that follows from f, and 
 - that involve only attributes in $R_1$
 
 * Algorithm to compute the projection of FDs
@@ -165,3 +167,119 @@ Given R and set F of FDs, the projection of F, $R_1 = \Pi_L R$, is:
    - for every attribute A in ${X}^+$
      
      - add $X \rightarrow A$ to T iff $A \in L$ and $A \not \in X$
+
+* Example relation
+
+#+ATTR_LaTeX: :align |l|l|l|l|l|l|
+| *_title_* | *_year_* | *len*    | *genre* | *studio*     | *starName*    |
+|---------------+--------+----------+---------+--------------+---------------|
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Carry Fisher  |
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Mark Hamill   |
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Harrison Ford |
+| The Godfather |   1972 |      175 | Drama   | Paramount    | Robert Duvall |
+| The Godfather |   1972 |      175 | Drama   | Paramount    | Marlon Brando |
+| Moonstruck    |   1987 |      102 | Comedy  | MGM          | Cher          |
+
+* Decomposition
+
+Give $R(A_1,...A_n)$ can be *decomposed* into  $S(B_1,...,B_m)$ and $T(C_1,...,C_k)$ s.t.
+
+1. $\{A_1,...A_n\} = \{B_1,...,B_m\} \cup \{C_1,...,C_k\}$, 
+
+2. $S = \Pi_{B_1,...,B_k}(R)$, and
+
+3. $T = \Pi_{C_1,...,C_k}(R)$
+
+
+* Decomposed relation
+
+\fontsize{8}{9.2}\selectfont
+
+#+ATTR_LaTeX: :align |l|l|l|l|l|l|
+| *_title_*     | *_year_* | *len*    | *genre* | *studio*     | *starName*    |
+|---------------+--------+----------+---------+--------------+---------------|
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Carry Fisher  |
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Mark Hamill   |
+| Star Wars     |   1977 |      124 | SciFi   | Fox          | Harrison Ford |
+| The Godfather |   1972 |      175 | Drama   | Paramount    | Robert Duvall |
+| The Godfather |   1972 |      175 | Drama   | Paramount    | Marlon Brando |
+| Moonstruck    |   1987 |      102 | Comedy  | MGM          | Cher          |
+
+$\Pi_{title, year, len, genre, studio}Movies$
+
+#+ATTR_LaTeX: :align |l|l|l|l|l|
+| *title*       | *year* | *len*    | *genre* | *studio*     |
+|---------------+--------+----------+---------+--------------+
+| Star Wars     |   1977 |      124 | SciFi   | Fox          |
+| The Godfather |   1972 |      175 | Drama   | Paramount    |
+| Moonstruck    |   1987 |      102 | Comedy  | MGM          |
+
+
+$\Pi_{title, year, starName}Movies$
+
+#+ATTR_LaTeX: :align |l|l|l|l|
+| *title*       | *year* |  *starName*    |
+|---------------+--------+----------------|
+| Star Wars     |   1977 |  Carry Fisher  |
+| Star Wars     |   1977 |  Mark Hamill   |
+| Star Wars     |   1977 |  Harrison Ford |
+| The Godfather |   1972 |  Robert Duvall |
+| The Godfather |   1972 |  Marlon Brando |
+| Moonstruck    |   1987 |  Cher          |
+
+
+* Good decomposition
+
+Given R we want to decompose it into two relations S and T s.t.
+
+1. *Lossless join*: $R = S \bowtie T$ 
+
+2. *Dependency preserving*: The projection of FDs of R into S and T safisfies:
+
+\begin{equation*}
+\{F_S \cup F_T\}^+ = \{F_R\}^+
+\end{equation*}
+
+* BCNF (Boyce Codd Normal Form)
+
+A relation R with set of FDs f is in BCNF iff 
+
+- for every non trivial FD $A_1, ..., A_n \rightarrow B_1, ... B_m$ in $f$
+
+  the left-hand side is a superkey
+
+* Algorithm to Decompose into BCNF relations
+
+Given R and set F of FDs. R is *not* BCNF
+
+1. Choose one FD $X \rightarrow Y$ not in BCNF
+
+2. Decompose
+
+   - $R_1 = \{X\}^+$
+   - $R_2 = X \cup (R - R_1)$
+
+3. Compute FDs for $R_1$ and $R_2$
+   - projection of FDs into $R_1$ and $R_2$
+
+4. If $R_1$ or $R_2$ are not in BCNF, recursively decompose
+
+* 3rd Normal Form (3NF)
+
+A relation R with set of FDs f is in 3NF iff 
+
+- for every non trivial FD $A_1, ..., A_n \rightarrow B_1, ... B_m$ in $f$
+
+  1. the left-hand side is a superkey, *or*
+
+     \quad
+
+  2. an attribute $c \in \{B_1, ..., B_m\}$ is either
+
+     a. $c \in \{A_1, ..., A_n\}$, or
+ 
+     b. $c$ is part of *some* candidate key
+
+
+
+
