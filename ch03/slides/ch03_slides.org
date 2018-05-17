@@ -162,7 +162,7 @@ Given R and set f of FDs, the projection of f, $R_1 = \Pi_L R$, is:
 
 1. $T \leftarrow \emptyset$
 
-2. For each subset $X \in L$ compute ${X}^+$
+2. For each subset $X \subset L$ compute ${X}^+$
     
    - for every attribute A in ${X}^+$
      
@@ -281,5 +281,21 @@ A relation R with set of FDs f is in 3NF iff
      b. $c$ is part of *some* candidate key
 
 
+
+* Decomposition of a Rel. into 3NF Relations (synthesis alg.)
+
+Given R with set of FDs F
+
+1. Find G, a minimal basis of F
+
+2. For each FD $A_1 ... A_n \rightarrow B \in G$
+
+   a. add a relation with schema $A_1 ... A_n B$
+
+   b. with FD $A_1 ... A_n \rightarrow B$
+
+3. If *none* of the added relations in step 2 is a *Superkey* or R
+
+   - add another relation whose schema is a key of R
 
 
