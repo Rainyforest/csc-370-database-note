@@ -274,7 +274,7 @@ A relation R with set of FDs f is in 3NF iff
 
      \quad
 
-  2. an attribute $c \in \{B_1, ..., B_m\}$ is either
+  2. every attribute $c \in \{B_1, ..., B_m\}$ is either
 
      a. $c \in \{A_1, ..., A_n\}$, or
  

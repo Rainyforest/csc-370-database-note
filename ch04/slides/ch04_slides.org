@@ -1,0 +1,179 @@
+#+STARTUP: showall
+#+STARTUP: lognotestate
+#+TAGS: research(r) uvic(u) today(y) todo(t) cooking(c)
+#+SEQ_TODO: TODO(t) STARTED(s) DEFERRED(r) CANCELLED(c) | WAITING(w) DELEGATED(d) APPT(a) DONE(d) 
+#+DRAWERS: HIDDEN STATE
+#+ARCHIVE: %s_done::
+#+TITLE: High Level Database Design
+#+CATEGORY: 
+#+PROPERTY: header-args:sql             :engine postgresql  :exports both :cmdline csc370
+#+PROPERTY: header-args:sqlite          :db /path/to/db  :colnames yes
+#+PROPERTY: header-args:C++             :results output :flags -std=c++14 -Wall --pedantic -Werror
+#+PROPERTY: header-args:R               :results output  :colnames yes
+#+OPTIONS: ^:nil toc:nil
+# OPTIONS:   H:3 num:t  \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+# OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+# latex_header: \documentclass[a4paper,40pt]{extarticle}
+# latex_header: \usepackage[letter, top=1cm,bottom=2cm,left=1cm,right=1cm]{geometry}
+#+latex_header: \usefonttheme[onlymath]{serif}
+
+* Student and Course
+
+#+BEGIN_SRC sql
+CREATE TABLE Student (
+       sid CHAR(10),
+       sname VARCHAR,
+       PRIMARY KEY (sid)
+       );
+
+CREATE TABLE Course (
+       cid CHAR(10),
+       cname VARCHAR,
+       term CHAR(3),
+       PRIMARY KEY (cid, term),
+       );
+#+END_SRC
+
+
+* Enrolled
+
+#+BEGIN_SRC sql
+CREATE TABLE Enrolled
+       sid CHAR(10),
+       cid CHAR(10),
+       term CHAR(3),
+       PRIMARY KEY (sid, cid, term),
+       FOREIGN KEY(sid) REFERENCES Students,
+       FOREIGN KEY(cid,term) REFERENCES Course
+       );
+#+END_SRC
+
+* 0 or 1 relationship
+
+\small
+
+#+BEGIN_SRC sql
+CREATE TABLE R (
+       a1 INTEGER, -- not null, implied by being part of key
+       b1 INTEGER NOT NULL,
+       r1 INTEGER, 
+       PRIMARY KEY (a1),
+       FOREIGN KEY(a1) REFERENCES A,
+       FOREIGN KEY(b1) REFERENCES B,
+)
+
+#+END_SRC
+
+- since PK in R and A is the same, "merge" them
+
+#+BEGIN_SRC sql
+CREATE TABLE AR (
+       a1 INTEGER,
+       a2 INTEGER,
+       b1 INTEGER, -- can be null
+       r1 INTEGER, -- can be null
+       PRIMARY KEY (a1),
+       FOREIGN KEY(b1) REFERENCES B,
+)
+
+#+END_SRC
+
+* Arrows in both directions
+
+\small
+
+#+BEGIN_SRC sql
+CREATE TABLE R (
+       a1 INTEGER, -- a1 -> b1, r1
+       b1 INTEGER NOT NULL,
+       r1 INTEGER, 
+       PRIMARY KEY (a1),
+       UNIQUE (b1) --- b1 -> a1,r1
+       FOREIGN KEY(a1) REFERENCES A,
+       FOREIGN KEY(b1) REFERENCES B,
+);
+#+END_SRC
+
+or n
+
+#+BEGIN_SRC sql
+CREATE TABLE R (
+       a1 INTEGER  NOT NULL,
+       b1 INTEGER, -- not null, implied by being part of key
+       r1 INTEGER, 
+       PRIMARY KEY (b1),
+       UNIQUE (a1)
+       FOREIGN KEY(a1) REFERENCES A,
+       FOREIGN KEY(b1) REFERENCES B,
+);
+#+END_SRC
+
+* Exactly one relationship
+
+\small
+
+#+BEGIN_SRC sql
+CREATE TABLE AR (
+       a1 INTEGER,
+       a2 INTEGER,
+       b1 INTEGER NOT NULL, -- it must be related to one tuple in B
+       r1 INTEGER, -- can be null
+       PRIMARY KEY (a1),
+       FOREIGN KEY(b1) REFERENCES B,
+)
+
+#+END_SRC
+
+
+
+* Roles
+
+\small
+
+#+BEGIN_SRC sql
+CREATE TABLE Sequel (
+       originaltitle VARCHAR,
+       originalyear INT,
+       sequeltitle VARCHAR,
+       sequelyear INT,
+       PRIMARY KEY (sequaltitle, sequelyear),
+       FOREIGN KEY(originaltitle, originalyear) 
+            REFERENCES Movie,
+       FOREIGN KEY(sequeltitle, sequelyear) 
+           REFERENCES Movie
+);
+#+END_SRC
+
+* Inheritance
+
+- create *Movies* as usual
+
+#+BEGIN_SRC sql 
+CREATE TABLE MurderMysteries (
+       title CHAR(30),
+       year INTEGER,
+       weapon VARCHAR,
+       PRIMARY KEY(title, year)
+       FOREIGN KEY(title, year) REFERENCES Movies
+);
+
+#+END_SRC
+
+- create table voices... 
+  - ... as usual... but references Cartoons
+
+* Weak entity
+
+
+
+#+BEGIN_SRC sql
+CREATE TABLE  Dependents (
+   eid CHAR(10),
+   dname CHAR(30),
+   age  INTEGER,
+   PRIMARY KEY(eid, dname),
+   FOREIGN KEY(eid) REFERENCES Employees
+      ON DELETE CASCADE
+);
+
+#+END_SRC
