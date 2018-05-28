@@ -7,7 +7,7 @@
 #+TITLE: High Level Database Design
 #+CATEGORY: 
 #+PROPERTY: header-args:sql             :engine postgresql  :exports both :cmdline csc370
-#+PROPERTY: header-args:sqlite          :db /path/to/db  :colnames yes
+#+PROPERTY: header-args:sqlite          :db /tmp/test.db  :colnames yes
 #+PROPERTY: header-args:C++             :results output :flags -std=c++14 -Wall --pedantic -Werror
 #+PROPERTY: header-args:R               :results output  :colnames yes
 #+OPTIONS: ^:nil toc:nil
@@ -20,20 +20,29 @@
 * Student and Course
 
 #+BEGIN_SRC sql
+DROP TABLE IF EXISTS Student; 
 CREATE TABLE Student (
        sid CHAR(10),
        sname VARCHAR,
-       PRIMARY KEY (sid)
+       PRIMARY KEY (sid) -- constraint
        );
 
+
+DROP TABLE IF EXISTS Course; 
 CREATE TABLE Course (
        cid CHAR(10),
        cname VARCHAR,
        term CHAR(3),
-       PRIMARY KEY (cid, term),
+       PRIMARY KEY (cid, term)
        );
 #+END_SRC
 
+#+RESULTS:
+| DROP TABLE   |
+|--------------|
+| CREATE TABLE |
+| DROP TABLE   |
+| CREATE TABLE |
 
 * Enrolled
 
@@ -42,8 +51,9 @@ CREATE TABLE Enrolled
        sid CHAR(10),
        cid CHAR(10),
        term CHAR(3),
+       
        PRIMARY KEY (sid, cid, term),
-       FOREIGN KEY(sid) REFERENCES Students,
+       FOREIGN KEY(sida) REFERENCES Students,
        FOREIGN KEY(cid,term) REFERENCES Course
        );
 #+END_SRC
@@ -63,6 +73,23 @@ CREATE TABLE R (
 )
 
 #+END_SRC
+
+#+BEGIN_SRC sql
+CREATE TABLE R (
+       a1 INTEGER, -- not null, implied by being part of key
+       a2 INTEGER, -- not null, implied by being part of key
+       b1 INTEGER NOT NULL,
+       r1 INTEGER, 
+       PRIMARY KEY (a1,a2),
+       UNIQUE (b1),
+       UNIQUE (a1,a2), -- implicit
+       FOREIGN KEY(a1,a2) REFERENCES A,
+       FOREIGN KEY(b1) REFERENCES B,
+)
+
+#+END_SRC
+
+
 
 - since PK in R and A is the same, "merge" them
 
