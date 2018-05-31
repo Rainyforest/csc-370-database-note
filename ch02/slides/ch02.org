@@ -1,0 +1,98 @@
+#+STARTUP: showall
+#+STARTUP: lognotestate
+#+TAGS: research(r) uvic(u) today(y) todo(t) cooking(c)
+#+SEQ_TODO: TODO(t) STARTED(s) DEFERRED(r) CANCELLED(c) | WAITING(w) DELEGATED(d) APPT(a) DONE(d) 
+#+DRAWERS: HIDDEN STATE
+#+ARCHIVE: %s_done::
+#+TITLE: Chapter 2 and Chapter 5
+#+CATEGORY: 
+#+PROPERTY: header-args:sql             :engine postgresql  :exports both :cmdline csc370
+#+PROPERTY: header-args:sqlite          :db /path/to/db  :colnames yes
+#+PROPERTY: header-args:C++             :results output :flags -std=c++14 -Wall --pedantic -Werror
+#+PROPERTY: header-args:R               :results output  :colnames yes
+#+OPTIONS: ^:nil
+
+Chapter 2 and Chapter 5
+
+#+BEGIN_SRC sql
+DROP TABLE IF EXISTS R ;
+DROP TABLE IF EXISTS S ;
+CREATE TABLE R(
+    a int,
+    b char
+);
+CREATE TABLE S(
+    c int,
+    d char
+);
+#+END_SRC
+
+#+RESULTS:
+| DROP TABLE   |
+|--------------|
+| DROP TABLE   |
+| CREATE TABLE |
+| CREATE TABLE |
+
+#+BEGIN_SRC sql
+delete from R;
+insert into R values (1,'a'),(2,'b'),(3,'c');
+#+END_SRC
+
+#+RESULTS:
+| INSERT 0 3 |
+|------------|
+
+#+BEGIN_SRC sql
+delete from S;
+insert into S values (1,'a'),(4,'f'),(5,'x');
+#+END_SRC
+
+#+RESULTS:
+| DELETE 0   |
+|------------|
+| INSERT 0 3 |
+
+#+BEGIN_SRC sql
+select * from R;
+#+END_SRC
+
+#+RESULTS:
+| a | b |
+|---+---|
+| 1 | a |
+| 2 | b |
+| 3 | c |
+
+#+BEGIN_SRC sql
+select * from S;
+#+END_SRC
+
+#+RESULTS:
+| c | d |
+|---+---|
+| 1 | a |
+| 4 | f |
+| 5 | x |
+
+#+BEGIN_SRC sql
+TABLE R;
+#+END_SRC
+
+#+RESULTS:
+| a | b |
+|---+---|
+| 1 | a |
+| 2 | b |
+| 3 | c |
+
+#+BEGIN_SRC sql
+TABLE S;
+#+END_SRC
+
+#+RESULTS:
+| c | d |
+|---+---|
+| 1 | a |
+| 4 | f |
+| 5 | x |
