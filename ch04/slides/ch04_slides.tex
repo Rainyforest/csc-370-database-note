@@ -1,25 +1,37 @@
-#+STARTUP: showall
-#+STARTUP: lognotestate
-#+TAGS: research(r) uvic(u) today(y) todo(t) cooking(c)
-#+SEQ_TODO: TODO(t) STARTED(s) DEFERRED(r) CANCELLED(c) | WAITING(w) DELEGATED(d) APPT(a) DONE(d) 
-#+DRAWERS: HIDDEN STATE
-#+ARCHIVE: %s_done::
-#+TITLE: High Level Database Design
-#+CATEGORY: 
-#+PROPERTY: header-args:sql             :engine postgresql  :exports both :cmdline csc370
-#+PROPERTY: header-args:sqlite          :db /tmp/test.db  :colnames yes
-#+PROPERTY: header-args:C++             :results output :flags -std=c++14 -Wall --pedantic -Werror
-#+PROPERTY: header-args:R               :results output  :colnames yes
-#+OPTIONS: ^:nil toc:nil
-# OPTIONS:   H:3 num:t  \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
-# OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
-# latex_header: \documentclass[a4paper,40pt]{extarticle}
-# latex_header: \usepackage[letter, top=1cm,bottom=2cm,left=1cm,right=1cm]{geometry}
-#+latex_header: \usefonttheme[onlymath]{serif}
+% Created 2018-05-31 Thu 01:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usefonttheme[onlymath]{serif}
+\usetheme{default}
+\author{dmg}
+\date{\today}
+\title{High Level Database Design}
+\hypersetup{
+ pdfauthor={dmg},
+ pdftitle={High Level Database Design},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.2.2 (Org mode 9.1.7)}, 
+ pdflang={English}}
+\begin{document}
 
-* Student and Course
+\maketitle
 
-#+BEGIN_SRC sql
+\begin{frame}[fragile,label={sec:org4fd63fb}]{Student and Course}
+ \begin{verbatim}
 DROP TABLE IF EXISTS Student; 
 CREATE TABLE Student (
        sid CHAR(10),
@@ -35,34 +47,37 @@ CREATE TABLE Course (
        term CHAR(3),
        PRIMARY KEY (cid, term)
        );
-#+END_SRC
+\end{verbatim}
 
-#+RESULTS:
-| DROP TABLE   |
-|--------------|
-| CREATE TABLE |
-| DROP TABLE   |
-| CREATE TABLE |
+\begin{center}
+\begin{tabular}{l}
+DROP TABLE\\
+\hline
+CREATE TABLE\\
+DROP TABLE\\
+CREATE TABLE\\
+\end{tabular}
+\end{center}
+\end{frame}
 
-* Enrolled
-
-#+BEGIN_SRC sql
+\begin{frame}[fragile,label={sec:orgd891aff}]{Enrolled}
+ \begin{verbatim}
 CREATE TABLE Enrolled
        sid CHAR(10),
        cid CHAR(10),
        term CHAR(3),
-       
+
        PRIMARY KEY (sid, cid, term),
        FOREIGN KEY(sida) REFERENCES Students,
        FOREIGN KEY(cid,term) REFERENCES Course
        );
-#+END_SRC
+\end{verbatim}
+\end{frame}
 
-* 0 or 1 relationship
+\begin{frame}[fragile,label={sec:org48265ac}]{0 or 1 relationship}
+ \small
 
-\small
-
-#+BEGIN_SRC sql
+\begin{verbatim}
 CREATE TABLE R (
        a1 INTEGER, -- not null, implied by being part of key
        b1 INTEGER NOT NULL,
@@ -72,9 +87,9 @@ CREATE TABLE R (
        FOREIGN KEY(b1) REFERENCES B,
 )
 
-#+END_SRC
+\end{verbatim}
 
-#+BEGIN_SRC sql
+\begin{verbatim}
 CREATE TABLE R (
        a1 INTEGER, -- not null, implied by being part of key
        a2 INTEGER, -- not null, implied by being part of key
@@ -87,13 +102,15 @@ CREATE TABLE R (
        FOREIGN KEY(b1) REFERENCES B,
 )
 
-#+END_SRC
+\end{verbatim}
 
 
 
-- since PK in R and A is the same, "merge" them
+\begin{itemize}
+\item since PK in R and A is the same, "merge" them
+\end{itemize}
 
-#+BEGIN_SRC sql
+\begin{verbatim}
 CREATE TABLE AR (
        a1 INTEGER,
        a2 INTEGER,
@@ -103,13 +120,13 @@ CREATE TABLE AR (
        FOREIGN KEY(b1) REFERENCES B,
 )
 
-#+END_SRC
+\end{verbatim}
+\end{frame}
 
-* Arrows in both directions
+\begin{frame}[fragile,label={sec:org2d5d2cd}]{Arrows in both directions}
+ \small
 
-\small
-
-#+BEGIN_SRC sql
+\begin{verbatim}
 CREATE TABLE R (
        a1 INTEGER, -- a1 -> b1, r1
        b1 INTEGER NOT NULL,
@@ -119,11 +136,11 @@ CREATE TABLE R (
        FOREIGN KEY(a1) REFERENCES A,
        FOREIGN KEY(b1) REFERENCES B,
 );
-#+END_SRC
+\end{verbatim}
 
 or n
 
-#+BEGIN_SRC sql
+\begin{verbatim}
 CREATE TABLE R (
        a1 INTEGER  NOT NULL,
        b1 INTEGER, -- not null, implied by being part of key
@@ -133,13 +150,13 @@ CREATE TABLE R (
        FOREIGN KEY(a1) REFERENCES A,
        FOREIGN KEY(b1) REFERENCES B,
 );
-#+END_SRC
+\end{verbatim}
+\end{frame}
 
-* Exactly one relationship
+\begin{frame}[fragile,label={sec:org85625c7}]{Exactly one relationship}
+ \small
 
-\small
-
-#+BEGIN_SRC sql
+\begin{verbatim}
 CREATE TABLE AR (
        a1 INTEGER,
        a2 INTEGER,
@@ -149,15 +166,15 @@ CREATE TABLE AR (
        FOREIGN KEY(b1) REFERENCES B,
 )
 
-#+END_SRC
+\end{verbatim}
+\end{frame}
 
 
 
-* Roles
+\begin{frame}[fragile,label={sec:orgd1b2575}]{Roles}
+ \small
 
-\small
-
-#+BEGIN_SRC sql
+\begin{verbatim}
 CREATE TABLE Sequel (
        originaltitle VARCHAR,
        originalyear INT,
@@ -169,13 +186,15 @@ CREATE TABLE Sequel (
        FOREIGN KEY(sequeltitle, sequelyear) 
            REFERENCES Movie
 );
-#+END_SRC
+\end{verbatim}
+\end{frame}
 
-* Inheritance
+\begin{frame}[fragile,label={sec:org1ec4c73}]{Inheritance}
+ \begin{itemize}
+\item create \alert{Movies} as usual
+\end{itemize}
 
-- create *Movies* as usual
-
-#+BEGIN_SRC sql 
+\begin{verbatim}
 CREATE TABLE MurderMysteries (
        title CHAR(30),
        year INTEGER,
@@ -184,16 +203,18 @@ CREATE TABLE MurderMysteries (
        FOREIGN KEY(title, year) REFERENCES Movies
 );
 
-#+END_SRC
+\end{verbatim}
 
-- create table voices... 
-  - ... as usual... but references Cartoons
+\begin{itemize}
+\item create table voices\ldots{} 
+\begin{itemize}
+\item \ldots{} as usual\ldots{} but references Cartoons
+\end{itemize}
+\end{itemize}
+\end{frame}
 
-* Weak entity
-
-
-
-#+BEGIN_SRC sql
+\begin{frame}[fragile,label={sec:org0fe5608}]{Weak entity}
+ \begin{verbatim}
 CREATE TABLE  Dependents (
    eid CHAR(10),
    dname CHAR(30),
@@ -203,4 +224,6 @@ CREATE TABLE  Dependents (
       ON DELETE CASCADE
 );
 
-#+END_SRC
+\end{verbatim}
+\end{frame}
+\end{document}
