@@ -204,3 +204,129 @@ CREATE TABLE  Dependents (
 );
 
 #+END_SRC
+
+
+
+#+BEGIN_SRC sql
+SELECT * from 
+   (SELECT * FROm R WHERE a > 1) AS temp
+ WHERE b = 'c';
+#+END_SRC
+
+#+RESULTS:
+| a | b |
+|---+---|
+| 3 | c |
+
+
+#+BEGIN_SRC sql
+SELECT * from   
+  R  
+  WHERE a > 1 AND b = 'c';
+#+END_SRC
+
+#+RESULTS:
+| a | b |
+|---+---|
+| 3 | c |
+
+
+#+BEGIN_SRC sql
+select a + 5 as at1, 10, 18*100 as at2 FROM R;
+#+END_SRC
+
+#+RESULTS:
+| at1 | ?column? |  at2 |
+|-----+----------+------|
+|   6 |       10 | 1800 |
+|   7 |       10 | 1800 |
+|   8 |       10 | 1800 |
+
+#+BEGIN_SRC sql
+select a as at1,b as at2  FROM R;
+#+END_SRC
+
+#+RESULTS:
+| at1 | at2 |
+|-----+-----|
+|   1 | a   |
+|   2 | b   |
+|   3 | c   |
+
+#+BEGIN_SRC sql
+select * from r;
+#+END_SRC
+
+#+RESULTS:
+| a | b |
+|---+---|
+| 1 | a |
+| 2 | b |
+| 3 | c |
+
+
+#+BEGIN_SRC sql
+select * from 
+   R
+WHERE
+   a = (select a from 
+           (select * from R
+            where b = 'a') AS temp
+       );
+#+END_SRC
+
+#+RESULTS:
+| a | b |
+|---+---|
+| 1 | a |
+
+#+BEGIN_SRC sql
+select * from 
+   R
+WHERE
+   a = (select a from 
+           R
+        where b = 'a') 
+       ;
+#+END_SRC
+
+#+RESULTS:
+| a | b |
+|---+---|
+| 1 | a |
+
+
+#+BEGIN_SRC sql
+select * from 
+           R
+        where b = 'a' ;
+#+END_SRC
+
+#+RESULTS:
+| QUERY PLAN                                         |
+|----------------------------------------------------|
+| Seq Scan on r  (cost=0.00..35.50 rows=10 width=12) |
+| Filter: (b = 'a'::bpchar)                          |
+
+#+BEGIN_SRC sql
+WITH T as (select a as u, b as v from R)
+   TABLE T;
+#+END_SRC
+
+#+RESULTS:
+| u | v |
+|---+---|
+| 1 | a |
+| 2 | b |
+| 3 | c |
+
+#+BEGIN_SRC sql
+table s;
+#+END_SRC
+
+#+RESULTS:
+| c | d |
+|---+---|
+| 1 | a |
+| 4 | f |
+| 5 | x |
